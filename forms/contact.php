@@ -1,41 +1,42 @@
 <?php
-  /**
-  * Requires the "PHP Email Form" library
-  * The "PHP Email Form" library is available only in the pro version of the template
-  * The library should be uploaded to: vendor/php-email-form/php-email-form.php
-  * For more info and help: https://bootstrapmade.com/php-email-form/
-  */
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Recopila los datos del formulario
+    $name = $_POST["name"];
+    $email = $_POST["email"];
+    $subject = $_POST["subject"];
+    $message = $_POST["message"];
 
-  // Replace contact@example.com with your real receiving email address
-  $receiving_email_address = 'contact@example.com';
+    // Dirección de correo a la que se enviará el mensaje
+    $to = "cespinosa@deltec.com.co";
 
-  if( file_exists($php_email_form = '../assets/vendor/php-email-form/php-email-form.php' )) {
-    include( $php_email_form );
-  } else {
-    die( 'Unable to load the "PHP Email Form" Library!');
-  }
+    // Encabezados del correo
+    $headers = "From: $email" . "\r\n";
+    $headers .= "Reply-To: $email" . "\r\n";
+    $headers .= "MIME-Version: 1.0" . "\r\n";
+    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
 
-  $contact = new PHP_Email_Form;
-  $contact->ajax = true;
-  
-  $contact->to = $receiving_email_address;
-  $contact->from_name = $_POST['name'];
-  $contact->from_email = $_POST['email'];
-  $contact->subject = $_POST['subject'];
+    // Contenido del correo
+    $message_body = "
+    <html>
+    <body>
+        <h2>Detalles del mensaje</h2>
+        <p><strong>Nombre:</strong> $name</p>
+        <p><strong>Email:</strong> $email</p>
+        <p><strong>Asunto:</strong> $subject</p>
+        <p><strong>Mensaje:</strong></p>
+        <p>$message</p>
+    </body>
+    </html>
+    ";
 
-  // Uncomment below code if you want to use SMTP to send emails. You need to enter your correct SMTP credentials
-  /*
-  $contact->smtp = array(
-    'host' => 'example.com',
-    'username' => 'example',
-    'password' => 'pass',
-    'port' => '587'
-  );
-  */
-
-  $contact->add_message( $_POST['name'], 'From');
-  $contact->add_message( $_POST['email'], 'Email');
-  $contact->add_message( $_POST['message'], 'Message', 10);
-
-  echo $contact->send();
+    // Intenta enviar el correo
+    if (mail($to, $subject, $message_body, $headers)) {
+        echo "success"; // Envío exitoso
+    } else {
+        echo "error"; // Error en el envío
+    }
+} else {
+    echo "No se ha enviado ningún formulario.";
+}
 ?>
+
