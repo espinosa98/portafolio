@@ -475,6 +475,12 @@ section {
   background-color: #149ddd;
 }
 
+@media (max-width: 767px) {
+.skills .skills-content .col-lg-2 {
+    width: 50%; /* Divide las columnas en 2 en dispositivos móviles */
+  }
+}
+
 /*--------------------------------------------------------------
 # Resume
 --------------------------------------------------------------*/
